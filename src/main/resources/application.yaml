@@ -1,3 +1,14 @@
 spring:
   application:
    name: HeroBattle
+  datasource:
+    url: jdbc:postgresql://localhost:5432/heroBattle
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: none
