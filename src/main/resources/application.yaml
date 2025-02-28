@@ -12,3 +12,5 @@ spring:
     hibernate:
       format_sql: true
       ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
