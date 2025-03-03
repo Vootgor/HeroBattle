@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Hero {
+public class HeroEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
