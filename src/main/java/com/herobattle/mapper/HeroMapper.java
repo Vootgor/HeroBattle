@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface HeroMapper {
 
-    @Mapping(target = "id", ignore = true)
+
     HeroEntity mapToEntity(CreateHeroRequest request);
 
     HeroDto mapToDto(HeroEntity entity);
