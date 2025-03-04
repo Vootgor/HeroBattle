@@ -3,6 +3,7 @@ package com.herobattle.controller;
 import com.herobattle.controller.dto.HeroDto;
 import com.herobattle.controller.request.CreateHeroRequest;
 import com.herobattle.service.HeroService;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,5 +32,12 @@ public class HeroesController {
     }
 
     @GetMapping("/{id}")
-    public HeroDto getHero(@PathVariable UUID id) {}
+    public HeroDto getHero(@PathVariable UUID id) {
+        return heroService.getHero(id);
+    }
+
+    @GetMapping
+    public List<HeroDto> getAllHeroes(){
+        return heroService.getAllHeroes();
+    }
 }
