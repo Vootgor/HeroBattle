@@ -1,4 +1,4 @@
-package com.herobattle.model.entity;
+package com.herobattle.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

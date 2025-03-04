@@ -1,6 +1,6 @@
-package com.herobattle.model.repository;
+package com.herobattle.repository;
 
-import com.herobattle.model.entity.HeroEntity;
+import com.herobattle.repository.entity.HeroEntity;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
