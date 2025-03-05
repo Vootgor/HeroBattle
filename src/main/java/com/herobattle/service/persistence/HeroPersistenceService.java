@@ -1,4 +1,4 @@
-package com.herobattle.service;
+package com.herobattle.service.persistence;
 
 import com.herobattle.mapper.HeroMapper;
 import com.herobattle.repository.HeroRepository;

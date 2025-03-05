@@ -6,6 +6,7 @@ import com.herobattle.service.model.Hero;
 import java.util.List;
 import java.util.UUID;
 
+import com.herobattle.service.persistence.HeroPersistenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.herobattle.service.model.Hero;
+import com.herobattle.service.persistence.HeroPersistenceService;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.UUID;
