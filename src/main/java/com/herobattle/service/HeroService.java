@@ -18,24 +18,24 @@ public class HeroService {
     private final HeroRepository heroRepository;
     private final HeroMapper heroMapper;
 
-    public HeroDto createHero(CreateHeroRequest request){
+    public HeroDto createHero(CreateHeroRequest request) {
         HeroEntity entity = heroMapper.mapToEntity(request);
         return heroMapper.mapToDto(heroRepository.save(entity));
     }
 
-    public HeroDto getHero(UUID heroId){
+    public HeroDto getHero(UUID heroId) {
         return heroMapper.mapToDto(heroRepository.findById(heroId)
             .orElseThrow(() -> new EntityNotFoundException("Hero not found with id: " + heroId)));
     }
 
-    public HeroDto deleteHero(UUID heroId){
+    public HeroDto deleteHero(UUID heroId) {
         HeroEntity entity = heroRepository.findById(heroId)
             .orElseThrow(() -> new EntityNotFoundException("Hero not found with id: " + heroId));
-        heroRepository.delete(entity);
+        heroRepository.deleteById(heroId);
         return heroMapper.mapToDto(entity);
     }
 
-    public List<HeroDto> getAllHeroes(){
+    public List<HeroDto> getAllHeroes() {
         return heroRepository.findAll().stream()
             .map(heroMapper::mapToDto)
             .toList();

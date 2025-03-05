@@ -1,13 +1,22 @@
 package com.herobattle.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.herobattle.controller.dto.HeroDto;
 import com.herobattle.mapper.HeroMapper;
 import com.herobattle.repository.HeroRepository;
 import com.herobattle.repository.entity.HeroEntity;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.util.Optional;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +24,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @ExtendWith(MockitoExtension.class)
-class HeroServiceTest {
+public class HeroServiceTest {
 
     @Mock
     private HeroRepository heroRepository;
@@ -31,40 +37,43 @@ class HeroServiceTest {
     private HeroService heroService;
 
     private UUID heroId;
-    private HeroEntity hero;
+    private HeroEntity heroEntity;
     private HeroDto heroDto;
 
     @BeforeEach
     void setUp() {
         heroId = UUID.randomUUID();
-        hero = new HeroEntity(heroId, "Superman",100, 10);
-        heroDto = new HeroDto(heroId, "Superman", 100, 10);
+        heroEntity = new HeroEntity();
+        heroEntity.setId(heroId);
+        heroEntity.setName("Hero");
+        heroEntity.setHp(101);
+        heroEntity.setBaseDamage(15);
+
+        heroDto = new HeroDto(heroId, "Hero", 101, 15);
     }
 
     @Test
-    void getHero_ShouldReturnHeroDto_WhenHeroExists() {
-        when(heroRepository.findById(heroId)).thenReturn(Optional.of(hero));
-        when(heroMapper.mapToDto(hero)).thenReturn(heroDto);
+    void shouldDeleteHero_WhenHeroExists() {
+        when(heroRepository.findById(heroId)).thenReturn(Optional.of(heroEntity));
+        when(heroMapper.mapToDto(heroEntity)).thenReturn(heroDto);
 
-        HeroDto result = heroService.getHero(heroId);
+        HeroDto result = heroService.deleteHero(heroId);
 
-        assertNotNull(result);
-        assertEquals(heroDto.id(), result.id());
-        assertEquals(heroDto.name(), result.name());
+        assertEquals(heroDto, result);
+        verify(heroRepository).deleteById(heroId);
         verify(heroRepository, times(1)).findById(heroId);
-        verify(heroMapper, times(1)).mapToDto(hero);
+        verify(heroMapper, times(1)).mapToDto(heroEntity);
     }
 
     @Test
-    void getHero_ShouldThrowEntityNotFoundException_WhenHeroDoesNotExist() {
+    void shouldThrowEntityNotFound_WhenHeroDoesNotExist() {
+        UUID heroId = UUID.randomUUID();
         when(heroRepository.findById(heroId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () ->
-                heroService.getHero(heroId)
-        );
-
-        assertEquals("Hero not found with id: " + heroId, exception.getMessage());
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class, () -> heroService.deleteHero(heroId));
+        assertEquals("Hero not found with id: " + heroId, e.getMessage());
         verify(heroRepository, times(1)).findById(heroId);
-        verifyNoInteractions(heroMapper);
+        verify(heroRepository, never()).deleteById(heroId);
+        verify(heroMapper, never()).mapToDto(any());
     }
 }
