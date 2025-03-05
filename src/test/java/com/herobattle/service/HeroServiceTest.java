@@ -13,8 +13,10 @@ import com.herobattle.mapper.HeroMapper;
 import com.herobattle.repository.HeroRepository;
 import com.herobattle.repository.entity.HeroEntity;
 import jakarta.persistence.EntityNotFoundException;
+
 import java.util.Optional;
 import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,9 +70,8 @@ public class HeroServiceTest {
         UUID heroId = UUID.randomUUID();
         when(heroRepository.findById(heroId)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class
-            , () -> heroService.deleteHero(heroId));
-        assertEquals("Hero not found with id: " + heroId, exception.getMessage());
+        EntityNotFoundException e = assertThrows(EntityNotFoundException.class, () -> heroService.deleteHero(heroId));
+        assertEquals("Hero not found with id: " + heroId, e.getMessage());
         verify(heroRepository, times(1)).findById(heroId);
         verify(heroRepository, never()).deleteById(heroId);
         verify(heroMapper, never()).mapToDto(any());
