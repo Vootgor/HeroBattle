@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "enemies", schema = "heroBattle")
+@Table(name = "enemies")
 public class EnemyEntity {
 
     @Id
