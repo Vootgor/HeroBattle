@@ -2,7 +2,7 @@ package com.herobattle.controller.dto;
 
 import java.util.UUID;
 
-public record HeroDto(
+public record EnemyDto(
     UUID id,
     String name,
     Integer hp,
