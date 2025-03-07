@@ -32,14 +32,4 @@ public class HeroEntity {
 
     @Column(nullable = false)
     private Integer baseDamage;
-
-    @Override
-    public String toString() {
-        return "HeroEntity{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", hp=" + hp +
-            ", baseDamage=" + baseDamage +
-            '}';
-    }
 }
