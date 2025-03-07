@@ -5,6 +5,8 @@ import com.herobattle.controller.request.CreateHeroRequest;
 import com.herobattle.mapper.HeroMapper;
 import com.herobattle.service.HeroService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/heroes")
+@Tag(name = "HeroesController", description = "Контроллер для управления героями")
 public class HeroesController {
 
     private final HeroService heroService;
@@ -31,6 +34,7 @@ public class HeroesController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление героя", description = "Удаляет героя по ID и возвращает его данные")
     public HeroDto deleteHero(@PathVariable UUID id) {
         return heroMapper.mapToDto(heroService.deleteHero(id));
     }
