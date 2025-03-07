@@ -24,7 +24,7 @@ public class EnemyPersistenceService {
 
     public Enemy findById(UUID enemyId) {
         EnemyEntity entity = enemyRepository.findById(enemyId)
-            .orElseThrow(() -> new EntityNotFoundException("Hero not found with id: " + enemyId));
+            .orElseThrow(() -> new EntityNotFoundException("Enemy not found with id: " + enemyId));
         return enemyMapper.mapToModel(entity);
     }
 
