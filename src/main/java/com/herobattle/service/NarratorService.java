@@ -13,8 +13,7 @@ public class NarratorService {
 
     private final RestTemplate restTemplate;
 
-//    @Value("${narrator.api.url}")
-    @Value("${narrator.api.url:http://localhost:8082}")
+    @Value("${narrator.api.url}")
     private String baseUri;
 
     public NarratorComments getNarratorComments(String heroName,
