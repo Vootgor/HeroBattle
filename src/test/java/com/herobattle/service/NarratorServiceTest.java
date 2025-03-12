@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.herobattle.service.model.NarratorComments;
+import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ class NarratorServiceTest {
     @BeforeEach
     void setUp() {
         narratorService = new NarratorService(restTemplate);
-        java.lang.reflect.Field baseUriField;
+        Field baseUriField;
         try {
             baseUriField = NarratorService.class.getDeclaredField("baseUri");
             baseUriField.setAccessible(true);

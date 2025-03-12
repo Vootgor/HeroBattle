@@ -16,7 +16,8 @@ public class NarratorService {
     @Value("${narrator.api.url}")
     private String baseUri;
 
-    public NarratorComments getNarratorComments(String heroName,
+    public NarratorComments getNarratorComments(
+        String heroName,
         String weapon,
         String background,
         String clothes) {
