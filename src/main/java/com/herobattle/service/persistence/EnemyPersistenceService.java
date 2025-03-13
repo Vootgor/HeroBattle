@@ -7,6 +7,7 @@ import com.herobattle.service.model.Enemy;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,4 +39,15 @@ public class EnemyPersistenceService {
             .toList();
     }
 
+    public List<Enemy> getRandomEnemiesAmountFromTo(int minEnemies, int maxEnemies) {
+        int randomNumber = ThreadLocalRandom.current().nextInt(minEnemies, maxEnemies + 1);
+        long totalEnemies = enemyRepository.count();
+        if (totalEnemies < randomNumber) {
+            throw new IllegalArgumentException(
+                "Requested enemies exceed available count. Available " + totalEnemies);
+        }
+        return enemyRepository.findRandomEnemies(randomNumber).stream()
+            .map(enemyMapper::mapToModel)
+            .toList();
+    }
 }
