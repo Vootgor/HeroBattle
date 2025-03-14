@@ -22,7 +22,7 @@ public class BattleService {
         if (minEnemies > maxEnemies) {
             throw new IllegalArgumentException("minEnemies cannot exceed maxEnemies");
         }
-        if (minEnemies < 0) {
+        if (minEnemies <= 0) {
             throw new IllegalArgumentException("minEnemies cannot be less than 0");
         }
 
