@@ -49,7 +49,7 @@ class BattleServiceTest {
         assertEquals("Enemy атакует Hero и наносит 5 урона, у героя остается 145 HP!!"
             , LogResult.actionLog().getFirst());
         assertEquals(145, hero.getHp(),
-            "HP героя после боя с тремя врагами должно быть 145");
+            "HP героя после боя с одним врагом должно быть 145");
     }
 
     @Test
@@ -58,19 +58,27 @@ class BattleServiceTest {
         Hero hero = new Hero(heroId, "Hero", 150, 15);
 
         List<Enemy> enemies = List.of(
-            new Enemy(UUID.randomUUID(), "Enemy1", 15, 10),
-            new Enemy(UUID.randomUUID(), "Enemy2", 15, 10),
-            new Enemy(UUID.randomUUID(), "Enemy3", 15, 10)
+            new Enemy(UUID.randomUUID(), "Enemy1", 15, 50),
+            new Enemy(UUID.randomUUID(), "Enemy2", 30, 20),
+            new Enemy(UUID.randomUUID(), "Enemy3", 60, 10)
         );
 
         List<String> expectedActionLog = List.of(
-            "Enemy1 атакует Hero и наносит 10 урона, у героя остается 140 HP!!",
+            "Enemy1 атакует Hero и наносит 50 урона, у героя остается 100 HP!!",
             "Hero атакует Enemy1 и наносит 15 урона, у врага остается 0 HP!!",
-            "Enemy2 атакует Hero и наносит 10 урона, у героя остается 130 HP!!",
+            "Enemy2 атакует Hero и наносит 20 урона, у героя остается 80 HP!!",
+            "Hero атакует Enemy2 и наносит 15 урона, у врага остается 15 HP!!",
+            "Enemy2 атакует Hero и наносит 20 урона, у героя остается 60 HP!!",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 0 HP!!",
-            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 120 HP!!",
+            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 50 HP!!",
+            "Hero атакует Enemy3 и наносит 15 урона, у врага остается 45 HP!!",
+            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 40 HP!!",
+            "Hero атакует Enemy3 и наносит 15 урона, у врага остается 30 HP!!",
+            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 30 HP!!",
+            "Hero атакует Enemy3 и наносит 15 урона, у врага остается 15 HP!!",
+            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 20 HP!!",
             "Hero атакует Enemy3 и наносит 15 урона, у врага остается 0 HP!!"
-        );
+            );
         BattleLog expectedLog = new BattleLog(expectedActionLog, "Герой победил всех!");
 
         when(heroPersistenceService.findById(heroId)).thenReturn(hero);
@@ -78,27 +86,31 @@ class BattleServiceTest {
         BattleLog logResult = battleService.fight(heroId, 3, 3);
 
         assertEquals(expectedLog, logResult);
-        assertEquals(120, hero.getHp(),
-            "HP героя после боя с тремя врагами должно быть 120");
+        assertEquals(20, hero.getHp(),
+            "HP героя после боя с тремя врагами должно быть 20");
     }
 
     @Test
     void should_heroLossWithCorrectLogAndHp_when_fightingThreeEnemies() {
         UUID heroId = UUID.randomUUID();
-        Hero hero = new Hero(heroId, "Hero", 30, 15);
+        Hero hero = new Hero(heroId, "Hero", 100, 15);
 
         List<Enemy> enemies = List.of(
-            new Enemy(UUID.randomUUID(), "Enemy1", 15, 10),
-            new Enemy(UUID.randomUUID(), "Enemy2", 15, 10),
-            new Enemy(UUID.randomUUID(), "Enemy3", 15, 10)
+            new Enemy(UUID.randomUUID(), "Enemy1", 25, 20),
+            new Enemy(UUID.randomUUID(), "Enemy2", 30, 15),
+            new Enemy(UUID.randomUUID(), "Enemy3", 5, 50)
         );
 
         List<String> expectedActionLog = List.of(
-            "Enemy1 атакует Hero и наносит 10 урона, у героя остается 20 HP!!",
-            "Hero атакует Enemy1 и наносит 15 урона, у врага остается 0 HP!!",
-            "Enemy2 атакует Hero и наносит 10 урона, у героя остается 10 HP!!",
+            "Enemy1 атакует Hero и наносит 20 урона, у героя остается 80 HP!!",
+            "Hero атакует Enemy1 и наносит 15 урона, у врага остается 10 HP!!",
+            "Enemy1 атакует Hero и наносит 20 урона, у героя остается 60 HP!!",
+            "Hero атакует Enemy1 и наносит 15 урона, у врага остается -5 HP!!",
+            "Enemy2 атакует Hero и наносит 15 урона, у героя остается 45 HP!!",
+            "Hero атакует Enemy2 и наносит 15 урона, у врага остается 15 HP!!",
+            "Enemy2 атакует Hero и наносит 15 урона, у героя остается 30 HP!!",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 0 HP!!",
-            "Enemy3 атакует Hero и наносит 10 урона, у героя остается 0 HP!!"
+            "Enemy3 атакует Hero и наносит 50 урона, у героя остается -20 HP!!"
         );
         BattleLog expectedLog = new BattleLog(expectedActionLog, "Герой мертв");
 
@@ -107,8 +119,8 @@ class BattleServiceTest {
         BattleLog logResult = battleService.fight(heroId, 3, 3);
 
         assertEquals(expectedLog, logResult);
-        assertEquals(0, hero.getHp(),
-            "HP героя после боя с тремя врагами должно быть 0");
+        assertEquals(-20, hero.getHp(),
+            "HP героя после боя с тремя врагами должно быть -20");
     }
 
     @Test
