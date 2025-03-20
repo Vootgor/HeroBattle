@@ -27,10 +27,8 @@ public class ControllerExceptionHandler {
     }
 
     private ResponseEntity<ErrorDto> createResponseEntity(RestException restEx, HttpStatus status) {
-        return ResponseEntity.status(status).body(new ErrorDto(
-                restEx.getError(),
-                restEx.getMessage(),
-                LocalDateTime.now()
-        ));
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorDto(restEx.getError(), restEx.getMessage(), LocalDateTime.now()));
     }
 }
