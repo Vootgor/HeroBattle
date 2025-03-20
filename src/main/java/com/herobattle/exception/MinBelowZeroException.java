@@ -1,8 +1,8 @@
 package com.herobattle.exception;
 
-public class MinBelowZeroException extends RuntimeException {
+public class MinBelowZeroException extends RestException {
 
     public MinBelowZeroException() {
-        super("minEnemies cannot be less than 0");
+        super("User input error", "minEnemies cannot be less than 0");
     }
 }

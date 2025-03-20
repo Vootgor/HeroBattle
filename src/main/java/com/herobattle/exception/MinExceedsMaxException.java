@@ -1,8 +1,8 @@
 package com.herobattle.exception;
 
-public class MinExceedsMaxException extends RuntimeException {
+public class MinExceedsMaxException extends RestException {
 
     public MinExceedsMaxException() {
-        super("minEnemies cannot exceed maxEnemies");
+        super("User input error", "minEnemies cannot exceed maxEnemies");
     }
 }
