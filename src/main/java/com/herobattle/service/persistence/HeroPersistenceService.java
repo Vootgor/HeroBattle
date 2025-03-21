@@ -1,5 +1,6 @@
 package com.herobattle.service.persistence;
 
+import com.herobattle.exception.HeroNotFoundException;
 import com.herobattle.mapper.HeroMapper;
 import com.herobattle.repository.HeroRepository;
 import com.herobattle.repository.entity.HeroEntity;
@@ -29,7 +30,7 @@ public class HeroPersistenceService {
 
     public Hero findById(UUID heroId) {
         HeroEntity entity = heroRepository.findById(heroId)
-                .orElseThrow(() -> new EntityNotFoundException("Hero not found with id: " + heroId));
+                .orElseThrow(() -> new HeroNotFoundException(heroId));
         return heroMapper.mapToModel(entity);
     }
 

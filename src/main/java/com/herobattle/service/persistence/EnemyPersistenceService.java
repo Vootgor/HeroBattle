@@ -1,5 +1,6 @@
 package com.herobattle.service.persistence;
 
+import com.herobattle.exception.EnemyNotFoundException;
 import com.herobattle.mapper.EnemyMapper;
 import com.herobattle.repository.EnemyRepository;
 import com.herobattle.repository.entity.EnemyEntity;
@@ -25,7 +26,7 @@ public class EnemyPersistenceService {
 
     public Enemy findById(UUID enemyId) {
         EnemyEntity entity = enemyRepository.findById(enemyId)
-            .orElseThrow(() -> new EntityNotFoundException("Enemy not found with id: " + enemyId));
+            .orElseThrow(() -> new EnemyNotFoundException(enemyId));
         return enemyMapper.mapToModel(entity);
     }
 

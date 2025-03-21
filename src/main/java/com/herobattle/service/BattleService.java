@@ -1,5 +1,7 @@
 package com.herobattle.service;
 
+import com.herobattle.exception.MinBelowZeroException;
+import com.herobattle.exception.MinExceedsMaxException;
 import com.herobattle.service.model.BattleLog;
 import com.herobattle.service.model.Enemy;
 import com.herobattle.service.model.Hero;
@@ -20,10 +22,10 @@ public class BattleService {
 
     public BattleLog fight(UUID heroId, int minEnemies, int maxEnemies) {
         if (minEnemies > maxEnemies) {
-            throw new IllegalArgumentException("minEnemies cannot exceed maxEnemies");
+            throw new MinExceedsMaxException();
         }
         if (minEnemies <= 0) {
-            throw new IllegalArgumentException("minEnemies cannot be less than 0");
+            throw new MinBelowZeroException();
         }
 
         Hero hero = heroPersistenceService.findById(heroId);
