@@ -6,9 +6,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.herobattle.exception.HeroNotFoundException;
 import com.herobattle.service.model.Hero;
 import com.herobattle.service.persistence.HeroPersistenceService;
-import jakarta.persistence.EntityNotFoundException;
 
 import java.util.UUID;
 
@@ -51,9 +51,9 @@ public class HeroServiceTest {
     @Test
     void shouldThrowEntityNotFound_WhenHeroDoesNotExist() {
         UUID heroId = UUID.randomUUID();
-        when(heroPersistenceService.findById(heroId)).thenThrow(EntityNotFoundException.class);
+        when(heroPersistenceService.findById(heroId)).thenThrow(HeroNotFoundException.class);
 
-        assertThrows(EntityNotFoundException.class, () -> heroService.deleteHero(heroId));
+        assertThrows(HeroNotFoundException.class, () -> heroService.deleteHero(heroId));
         verify(heroPersistenceService, times(1)).findById(heroId);
     }
 }
