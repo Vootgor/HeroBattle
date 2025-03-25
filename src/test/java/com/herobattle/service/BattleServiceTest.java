@@ -12,6 +12,7 @@ import com.herobattle.exception.MinExceedsMaxException;
 import com.herobattle.service.model.BattleLog;
 import com.herobattle.service.model.Enemy;
 import com.herobattle.service.model.Hero;
+import com.herobattle.service.model.NarratorComments;
 import com.herobattle.service.persistence.EnemyPersistenceService;
 import com.herobattle.service.persistence.HeroPersistenceService;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ class BattleServiceTest {
     private HeroPersistenceService heroPersistenceService;
     @Mock
     private EnemyPersistenceService enemyPersistenceService;
+    @Mock
+    private NarratorService narratorService;
     @InjectMocks
     private BattleService battleService;
 
@@ -43,13 +46,26 @@ class BattleServiceTest {
         List<Enemy> enemies = new ArrayList<>();
         enemies.add(new Enemy(enemyId, "Enemy", 15, 5));
 
+        NarratorComments narratorComments = new NarratorComments(
+            "Жил был герой"
+            , "Герой атакует"
+            , "Герой повержен"
+            , "Герой победил"
+        );
+
         when(heroPersistenceService.findById(heroId)).thenReturn(hero);
         when(enemyPersistenceService.getRandomEnemiesAmountFromTo(1, 1)).thenReturn(enemies);
+        when(narratorService.getNarratorComments(
+            hero.getName()
+            , "weapon"
+            , "background"
+            , "clothes"))
+            .thenReturn(narratorComments);
 
         BattleLog LogResult = battleService.fight(heroId, 1, 1);
 
         assertEquals("Enemy атакует Hero и наносит 5 урона, у героя остается 145 HP!!"
-            , LogResult.actionLog().getFirst());
+            , LogResult.actionLog().get(1));
         assertEquals(145, hero.getHp(),
             "HP героя после боя с одним врагом должно быть 145");
     }
@@ -65,26 +81,48 @@ class BattleServiceTest {
             new Enemy(UUID.randomUUID(), "Enemy3", 60, 10)
         );
 
+        NarratorComments narratorComments = new NarratorComments(
+            "Жил был герой"
+            , "Герой атакует"
+            , "Герой повержен"
+            , "Герой победил"
+        );
+
         List<String> expectedActionLog = List.of(
+            "Жил был герой",
             "Enemy1 атакует Hero и наносит 50 урона, у героя остается 100 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy1 и наносит 15 урона, у врага остается 0 HP!!",
             "Enemy2 атакует Hero и наносит 20 урона, у героя остается 80 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 15 HP!!",
             "Enemy2 атакует Hero и наносит 20 урона, у героя остается 60 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 0 HP!!",
             "Enemy3 атакует Hero и наносит 10 урона, у героя остается 50 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy3 и наносит 15 урона, у врага остается 45 HP!!",
             "Enemy3 атакует Hero и наносит 10 урона, у героя остается 40 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy3 и наносит 15 урона, у врага остается 30 HP!!",
             "Enemy3 атакует Hero и наносит 10 урона, у героя остается 30 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy3 и наносит 15 урона, у врага остается 15 HP!!",
             "Enemy3 атакует Hero и наносит 10 урона, у героя остается 20 HP!!",
-            "Hero атакует Enemy3 и наносит 15 урона, у врага остается 0 HP!!"
-            );
+            "Герой атакует",
+            "Hero атакует Enemy3 и наносит 15 урона, у врага остается 0 HP!!",
+            "Герой победил"
+        );
         BattleLog expectedLog = new BattleLog(expectedActionLog, "Герой победил всех!");
 
         when(heroPersistenceService.findById(heroId)).thenReturn(hero);
         when(enemyPersistenceService.getRandomEnemiesAmountFromTo(3, 3)).thenReturn(enemies);
+        when(narratorService.getNarratorComments(
+            hero.getName()
+            , "weapon"
+            , "background"
+            , "clothes"))
+            .thenReturn(narratorComments);
         BattleLog logResult = battleService.fight(heroId, 3, 3);
 
         assertEquals(expectedLog, logResult);
@@ -103,21 +141,40 @@ class BattleServiceTest {
             new Enemy(UUID.randomUUID(), "Enemy3", 5, 50)
         );
 
+        NarratorComments narratorComments = new NarratorComments(
+            "Жил был герой"
+            , "Герой атакует"
+            , "Герой повержен"
+            , "Герой победил"
+        );
+
         List<String> expectedActionLog = List.of(
+            "Жил был герой",
             "Enemy1 атакует Hero и наносит 20 урона, у героя остается 80 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy1 и наносит 15 урона, у врага остается 10 HP!!",
             "Enemy1 атакует Hero и наносит 20 урона, у героя остается 60 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy1 и наносит 15 урона, у врага остается -5 HP!!",
             "Enemy2 атакует Hero и наносит 15 урона, у героя остается 45 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 15 HP!!",
             "Enemy2 атакует Hero и наносит 15 урона, у героя остается 30 HP!!",
+            "Герой атакует",
             "Hero атакует Enemy2 и наносит 15 урона, у врага остается 0 HP!!",
-            "Enemy3 атакует Hero и наносит 50 урона, у героя остается -20 HP!!"
+            "Enemy3 атакует Hero и наносит 50 урона, у героя остается -20 HP!!",
+            "Герой повержен"
         );
         BattleLog expectedLog = new BattleLog(expectedActionLog, "Герой мертв");
 
         when(heroPersistenceService.findById(heroId)).thenReturn(hero);
         when(enemyPersistenceService.getRandomEnemiesAmountFromTo(3, 3)).thenReturn(enemies);
+        when(narratorService.getNarratorComments(
+            hero.getName()
+            , "weapon"
+            , "background"
+            , "clothes"))
+            .thenReturn(narratorComments);
         BattleLog logResult = battleService.fight(heroId, 3, 3);
 
         assertEquals(expectedLog, logResult);
