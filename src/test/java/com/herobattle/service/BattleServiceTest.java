@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.herobattle.controller.request.FightRequest;
 import com.herobattle.exception.HeroNotFoundException;
 import com.herobattle.exception.MinBelowZeroException;
 import com.herobattle.exception.MinExceedsMaxException;
@@ -15,9 +16,11 @@ import com.herobattle.service.model.Hero;
 import com.herobattle.service.model.NarratorComments;
 import com.herobattle.service.persistence.EnemyPersistenceService;
 import com.herobattle.service.persistence.HeroPersistenceService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +39,23 @@ class BattleServiceTest {
     @InjectMocks
     private BattleService battleService;
 
+    private final NarratorComments narratorComments = new NarratorComments(
+            "Жил был герой"
+            , "Герой атакует"
+            , "Герой повержен"
+            , "Герой победил"
+    );
+
+    private FightRequest createFightRequest(int minEnemies, int maxEnemies) {
+        return new FightRequest(
+                minEnemies,
+                maxEnemies,
+                "weapon",
+                "background",
+                "clothes"
+        );
+    }
+
 
     @Test
     void should_logMonsterAttackFirstAndUpdateHeroHp_when_fightingOneEnemy() {
@@ -46,13 +66,6 @@ class BattleServiceTest {
         List<Enemy> enemies = new ArrayList<>();
         enemies.add(new Enemy(enemyId, "Enemy", 15, 5));
 
-        NarratorComments narratorComments = new NarratorComments(
-            "Жил был герой"
-            , "Герой атакует"
-            , "Герой повержен"
-            , "Герой победил"
-        );
-
         when(heroPersistenceService.findById(heroId)).thenReturn(hero);
         when(enemyPersistenceService.getRandomEnemiesAmountFromTo(1, 1)).thenReturn(enemies);
         when(narratorService.getNarratorComments(
@@ -62,7 +75,7 @@ class BattleServiceTest {
             , "clothes"))
             .thenReturn(narratorComments);
 
-        BattleLog LogResult = battleService.fight(heroId, 1, 1);
+        BattleLog LogResult = battleService.fight(heroId, createFightRequest(1, 1));
 
         assertEquals("Enemy атакует Hero и наносит 5 урона, у героя остается 145 HP!!"
             , LogResult.actionLog().get(1));
@@ -79,13 +92,6 @@ class BattleServiceTest {
             new Enemy(UUID.randomUUID(), "Enemy1", 15, 50),
             new Enemy(UUID.randomUUID(), "Enemy2", 30, 20),
             new Enemy(UUID.randomUUID(), "Enemy3", 60, 10)
-        );
-
-        NarratorComments narratorComments = new NarratorComments(
-            "Жил был герой"
-            , "Герой атакует"
-            , "Герой повержен"
-            , "Герой победил"
         );
 
         List<String> expectedActionLog = List.of(
@@ -123,7 +129,7 @@ class BattleServiceTest {
             , "background"
             , "clothes"))
             .thenReturn(narratorComments);
-        BattleLog logResult = battleService.fight(heroId, 3, 3);
+        BattleLog logResult = battleService.fight(heroId, createFightRequest(3, 3));
 
         assertEquals(expectedLog, logResult);
         assertEquals(20, hero.getHp(),
@@ -139,13 +145,6 @@ class BattleServiceTest {
             new Enemy(UUID.randomUUID(), "Enemy1", 25, 20),
             new Enemy(UUID.randomUUID(), "Enemy2", 30, 15),
             new Enemy(UUID.randomUUID(), "Enemy3", 5, 50)
-        );
-
-        NarratorComments narratorComments = new NarratorComments(
-            "Жил был герой"
-            , "Герой атакует"
-            , "Герой повержен"
-            , "Герой победил"
         );
 
         List<String> expectedActionLog = List.of(
@@ -175,7 +174,7 @@ class BattleServiceTest {
             , "background"
             , "clothes"))
             .thenReturn(narratorComments);
-        BattleLog logResult = battleService.fight(heroId, 3, 3);
+        BattleLog logResult = battleService.fight(heroId, createFightRequest(3, 3));
 
         assertEquals(expectedLog, logResult);
         assertEquals(-20, hero.getHp(),
@@ -189,7 +188,7 @@ class BattleServiceTest {
             .thenThrow(new HeroNotFoundException(heroId));
 
         HeroNotFoundException exception = assertThrows(HeroNotFoundException.class, () ->
-            battleService.fight(heroId, 1, 1));
+            battleService.fight(heroId, createFightRequest(1, 1)));
 
         assertEquals("Hero not found", exception.getError());
         assertEquals("Hero not found with id: " + heroId, exception.getMessage());
@@ -202,7 +201,7 @@ class BattleServiceTest {
         UUID heroId = UUID.randomUUID();
 
         MinExceedsMaxException exception = assertThrows(MinExceedsMaxException.class, () ->
-            battleService.fight(heroId, 3, 2));
+                battleService.fight(heroId, createFightRequest(3, 2)));
         assertEquals("minEnemies cannot exceed maxEnemies", exception.getMessage());
         assertEquals("User input error", exception.getError());
     }
@@ -212,10 +211,8 @@ class BattleServiceTest {
         UUID heroId = UUID.randomUUID();
 
         MinBelowZeroException exception = assertThrows(MinBelowZeroException.class, () ->
-            battleService.fight(heroId, 0, 2));
+            battleService.fight(heroId, createFightRequest(0, 2)));
         assertEquals("minEnemies cannot be less than 0", exception.getMessage());
         assertEquals("User input error", exception.getError());
     }
-
-
 }

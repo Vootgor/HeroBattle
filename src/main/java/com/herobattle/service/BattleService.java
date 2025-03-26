@@ -40,7 +40,7 @@ public class BattleService {
         narratorComments = narratorService.getNarratorComments(
             hero.getName()
             , request.weapon()
-            , request.backGround()
+            , request.background()
             , request.clothes()
         );
         var actionLog = new ArrayList<String>();
