@@ -1,5 +1,6 @@
 package com.herobattle.service;
 
+import com.herobattle.controller.request.FightRequest;
 import com.herobattle.exception.MinBelowZeroException;
 import com.herobattle.exception.MinExceedsMaxException;
 import com.herobattle.service.model.BattleLog;
@@ -23,7 +24,10 @@ public class BattleService {
     private final NarratorService narratorService;
     private NarratorComments narratorComments;
 
-    public BattleLog fight(UUID heroId, int minEnemies, int maxEnemies) {
+    public BattleLog fight(UUID heroId, FightRequest request) {
+        var minEnemies = request.minEnemies();
+        var maxEnemies = request.maxEnemies();
+
         if (minEnemies > maxEnemies) {
             throw new MinExceedsMaxException();
         }
@@ -32,13 +36,12 @@ public class BattleService {
         }
 
         Hero hero = heroPersistenceService.findById(heroId);
-        List<Enemy> enemies = enemyPersistenceService.getRandomEnemiesAmountFromTo(minEnemies,
-            maxEnemies);
+        List<Enemy> enemies = enemyPersistenceService.getRandomEnemiesAmountFromTo(minEnemies, maxEnemies);
         narratorComments = narratorService.getNarratorComments(
             hero.getName()
-            , "weapon"
-            , "background"
-            , "clothes"
+            , request.weapon()
+            , request.backGround()
+            , request.clothes()
         );
         var actionLog = new ArrayList<String>();
         actionLog.add(narratorComments.onIntroduction());
