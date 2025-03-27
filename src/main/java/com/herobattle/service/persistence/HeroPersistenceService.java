@@ -5,7 +5,6 @@ import com.herobattle.mapper.HeroMapper;
 import com.herobattle.repository.HeroRepository;
 import com.herobattle.repository.entity.HeroEntity;
 import com.herobattle.service.model.Hero;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class HeroPersistenceService {
+public class HeroPersistenceService implements HeroPersistence {
 
     private final HeroRepository heroRepository;
     private final HeroMapper heroMapper;
