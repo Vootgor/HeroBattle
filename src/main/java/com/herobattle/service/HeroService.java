@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HeroService {
 
-    private final HeroPersistence heroPersistenceService;
+    private final HeroPersistence heroPersistence;
 
     public Hero createHero(CreateHeroRequest request) {
-        return heroPersistenceService.save(
+        return heroPersistence.save(
                 Hero.builder()
                         .name(request.name())
                         .hp(request.hp())
@@ -25,16 +25,16 @@ public class HeroService {
     }
 
     public Hero getHero(UUID heroId) {
-        return heroPersistenceService.findById(heroId);
+        return heroPersistence.findById(heroId);
     }
 
     public Hero deleteHero(UUID heroId) {
-        Hero model = heroPersistenceService.findById(heroId);
-        heroPersistenceService.deleteById(heroId);
+        Hero model = heroPersistence.findById(heroId);
+        heroPersistence.deleteById(heroId);
         return model;
     }
 
     public List<Hero> getAllHeroes() {
-        return heroPersistenceService.findAll();
+        return heroPersistence.findAll();
     }
 }
