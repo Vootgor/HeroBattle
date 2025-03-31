@@ -3,6 +3,7 @@ package com.herobattle.service;
 import com.herobattle.controller.request.CreateHeroRequest;
 import com.herobattle.service.model.Hero;
 
+import com.herobattle.service.persistence.HeroPersistence;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HeroService {
 
-    private final HeroPersistenceService heroPersistenceService;
+    private final HeroPersistence heroPersistenceService;
 
     public Hero createHero(CreateHeroRequest request) {
         return heroPersistenceService.save(
