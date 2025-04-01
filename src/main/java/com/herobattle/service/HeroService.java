@@ -3,21 +3,19 @@ package com.herobattle.service;
 import com.herobattle.controller.request.CreateHeroRequest;
 import com.herobattle.service.model.Hero;
 
+import com.herobattle.service.persistence.HeroPersistence;
 import java.util.List;
 import java.util.UUID;
 
-import com.herobattle.service.persistence.HeroPersistenceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class HeroService {
 
-    private final HeroPersistenceService heroPersistenceService;
+    private final HeroPersistence heroPersistence;
 
     public Hero createHero(CreateHeroRequest request) {
-        return heroPersistenceService.save(
+        return heroPersistence.save(
                 Hero.builder()
                         .name(request.name())
                         .hp(request.hp())
@@ -27,16 +25,16 @@ public class HeroService {
     }
 
     public Hero getHero(UUID heroId) {
-        return heroPersistenceService.findById(heroId);
+        return heroPersistence.findById(heroId);
     }
 
     public Hero deleteHero(UUID heroId) {
-        Hero model = heroPersistenceService.findById(heroId);
-        heroPersistenceService.deleteById(heroId);
+        Hero model = heroPersistence.findById(heroId);
+        heroPersistence.deleteById(heroId);
         return model;
     }
 
     public List<Hero> getAllHeroes() {
-        return heroPersistenceService.findAll();
+        return heroPersistence.findAll();
     }
 }
