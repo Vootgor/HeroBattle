@@ -1,10 +1,13 @@
 package com.herobattle.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.herobattle.controller.dto.HeroDto;
 import com.herobattle.controller.request.CreateHeroRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,6 +55,28 @@ class HeroesControllerIT {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andReturn().getResponse().getContentAsString();
+        HeroDto createdHero = objectMapper.readValue(response, HeroDto.class);
 
+        mockMvc.perform(get("/api/v1/heroes/" + createdHero.id()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("HeroName"))
+            .andExpect(jsonPath("$.hp").value(100))
+            .andExpect(jsonPath("$.baseDamage").value(20));
+    }
+
+    @Test
+    void testDeleteHero() throws Exception {
+        CreateHeroRequest request = new CreateHeroRequest("HeroName",100, 20);
+        String response = mockMvc.perform(post("/api/v1/heroes/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andReturn().getResponse().getContentAsString();
+        HeroDto createdHero = objectMapper.readValue(response, HeroDto.class);
+
+        mockMvc.perform(delete("/api/v1/heroes/" + createdHero.id()))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/v1/heroes/" + createdHero.id()))
+            .andExpect(status().isNotFound());
     }
 }
