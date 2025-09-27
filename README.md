@@ -44,6 +44,8 @@ HeroBattle — альфа-версия веб-приложения для сим
 3. После успешного запуска **storyTeller** запустить модуль **app** (Spring Boot):  
    `./gradlew :app:bootRun`
 
+4. Открыть [Swagger UI](http://localhost:8080/swagger-ui/index.html). Через него можно создавать героев и противников, а также вызвать метод в `battle-controller`.
+
 ---
 
 ## Технологии
