@@ -44,6 +44,8 @@ HeroBattle — альфа-версия веб-приложения для сим
 3. После успешного запуска **storyTeller** запустить модуль **app** (Spring Boot):  
    `./gradlew :app:bootRun`
 
+---
+
 ## Технологии
 
 - Java 21
