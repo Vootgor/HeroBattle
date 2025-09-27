@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.spring.dep.mgmt)
 }
 
-group = "com"
-version = "0.0.1-SNAPSHOT"
+group = "com.herobattle"
+version = "1.0"
 
 java {
     toolchain {
