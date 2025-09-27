@@ -26,47 +26,23 @@ HeroBattle — альфа-версия веб-приложения для сим
 
 ## Структура проекта
 
-```
-src/
-├─ main/
-│ ├─ java/com/herobattle/
-│ │ ├─ configuration/ # Конфигурации приложения
-│ │ ├─ controller/ # REST контроллеры
-│ │ │ ├─ dto/ # DTO
-│ │ │ └─ request/ # Request объекты
-│ │ ├─ exception/ # Кастомные исключения
-│ │ ├─ mapper/ # MapStruct мапперы
-│ │ ├─ repository/ # Репозитории и сущности
-│ │ └─ service/ # Бизнес-логика, модели, persistence
-│ └─ resources/
-│   ├─ application.yaml
-│   └─ db/changelog/ # Миграции базы данных
-└─ test/
-├─ java/com/herobattle/ # Unit и интеграционные тесты
-│ ├─ integration/
-│ └─ service/
-└─ resources/
-```
+Проект состоит из двух модулей:
+
+- **app** — основной модуль, в котором создаются герои, враги и происходят битвы.
+- **storyTeller** — статический модуль, отвечающий за тексты. В нем ничего не выполняется, он лишь предоставляет описание событий.
 
 ---
 
 ## Сборка и запуск
 
-### Локально
+1. Поднять базу данных и Redis через Docker Compose:  
+   `docker compose up -d`
 
-```bash
-./gradlew build
-./gradlew bootRun
-```
+2. Запустить модуль **storyTeller** (Spring Boot):  
+   `./gradlew :storyTeller:bootRun`
 
-### С Docker
-
-```bash
-docker-compose up -d
-```
-- Контейнер поднимает PostgreSQL, Redis и StoryTeller
-
----
+3. После успешного запуска **storyTeller** запустить модуль **app** (Spring Boot):  
+   `./gradlew :app:bootRun`
 
 ## Технологии
 
